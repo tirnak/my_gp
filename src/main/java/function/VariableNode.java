@@ -1,11 +1,15 @@
 package function;
 
+import function.interfaces.Leaf;
+import function.interfaces.Node;
+
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
- * Created by kise0116 on 21.04.2016.
+ * Created by tirnak on 21.04.2016.
  */
-public class VariableNode implements FunctionNode {
+public class VariableNode implements Leaf {
     private char name;
     private Double value;
 
@@ -32,7 +36,12 @@ public class VariableNode implements FunctionNode {
         return value;
     }
 
-    public void setChild(int index, FunctionNode node) {
+    public void fillChildren(Supplier<? extends Node> supplier) {
         throw new UnsupportedOperationException("variable is a constant");
+    }
+
+    @Override
+    public Node[] getChildren() {
+        return new Node[0];
     }
 }
