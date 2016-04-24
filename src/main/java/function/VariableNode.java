@@ -44,4 +44,9 @@ public class VariableNode implements Leaf {
     public Node[] getChildren() {
         return new Node[0];
     }
+
+    @Override
+    public String toString() {
+        return name + "";
+    }
 }

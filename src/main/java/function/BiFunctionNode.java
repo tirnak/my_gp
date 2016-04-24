@@ -3,6 +3,7 @@ package function;
 import function.interfaces.FunctionNode;
 import function.interfaces.Node;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -13,6 +14,11 @@ public class BiFunctionNode implements FunctionNode {
 
     public BiFunctionNode(BiFunction<Double, Double, Double> function) {
         this.function = function;
+    }
+
+    public BiFunctionNode(BiFunctionNode nodeToCopy) {
+        children = nodeToCopy.getChildren();
+        function = nodeToCopy.function;
     }
 
     public double eval() {
@@ -66,11 +72,41 @@ public class BiFunctionNode implements FunctionNode {
     }
 
     @Override
-    public FunctionNode getClone() {
-        try {
-            return (FunctionNode) this.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+    public String toString() {
+        return "(" + children[0] + " " + function + " " + children[1] + ")";
     }
+
+    @Override
+    public FunctionNode getClone() {
+        FunctionNode toReturn = new BiFunctionNode(this);
+        if (children[0] instanceof FunctionNode) {
+            toReturn.setChildren(0, ((FunctionNode)children[0]).getClone());
+        }
+        if (children[1] instanceof FunctionNode) {
+            toReturn.setChildren(1, ((FunctionNode) children[1]).getClone());
+        }
+        return toReturn;
+    }
+
+    public void swapArguments() {
+        Node tmp = children[0];
+        children[0] = children[1];
+        children[1] = tmp;
+    }
+
+
+    @Override
+    public FunctionNode[] getFunctionChildren() {
+        if (children[0] instanceof FunctionNode && children[1] instanceof FunctionNode) {
+            return (FunctionNode[]) children;
+        }
+        if (children[0] instanceof FunctionNode) {
+            return new FunctionNode[]{(FunctionNode) children[0]};
+        }
+        if (children[1] instanceof FunctionNode) {
+            return new FunctionNode[]{(FunctionNode) children[1]};
+        }
+        return new FunctionNode[0];
+    }
+
 }

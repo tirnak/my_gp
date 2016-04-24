@@ -26,4 +26,9 @@ public class ConstantNode implements Leaf {
     public ConstantNode(double value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return value + "";
+    }
 }

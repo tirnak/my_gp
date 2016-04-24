@@ -1,5 +1,6 @@
 package function;
 
+import function.functions.Id;
 import function.interfaces.FunctionNode;
 import function.interfaces.Leaf;
 import function.interfaces.Node;
@@ -50,6 +51,14 @@ public class UniFunctionNode implements FunctionNode {
     }
 
     @Override
+    public FunctionNode[] getFunctionChildren() {
+        if (child instanceof FunctionNode) {
+            return new FunctionNode[]{(FunctionNode) child};
+        }
+        return new FunctionNode[0];
+    }
+
+    @Override
     public void swapChildren(FunctionNode node) {
         if (!(node instanceof UniFunctionNode)) {
             throw new IllegalArgumentException("Must swap with anothre Uni");
@@ -59,12 +68,25 @@ public class UniFunctionNode implements FunctionNode {
         ((UniFunctionNode)node).child = tmp;
     }
 
+    public UniFunctionNode(UniFunctionNode nodeToCopy) {
+        child = nodeToCopy.child;
+        function = nodeToCopy.function;
+    }
+
+    @Override
+    public String toString() {
+        if (function instanceof Id) {
+            return child.toString();
+        }
+        return "(" + function + " " + child + ")";
+    }
+
     @Override
     public FunctionNode getClone() {
-        try {
-            return (FunctionNode) this.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+        FunctionNode toReturn = new UniFunctionNode(this);
+        if (child instanceof FunctionNode) {
+            toReturn.setChildren(0, ((FunctionNode) child).getClone());
         }
+        return toReturn;
     }
 }

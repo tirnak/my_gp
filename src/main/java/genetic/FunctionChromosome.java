@@ -18,8 +18,17 @@ public class FunctionChromosome extends Chromosome {
 
     private static final Character RESULT = '\0';
 
+    public FunctionNode getHead() {
+        return head.getClone();
+    }
+
     private FunctionNode head;
     private List<Map<Character, Double>> data;
+
+    public FunctionChromosome(FunctionNode head, List<Map<Character, Double>> data) {
+        this.head = head;
+        this.data = data;
+    }
 
     private FunctionChromosome(FunctionNode head) {
         this.head = head;
@@ -39,7 +48,15 @@ public class FunctionChromosome extends Chromosome {
     }
 
 
-    public static FunctionChromosome getFunctionChromosome(int depth, FunctionSetSupplier functionSetSupplier, TerminalSetSupplier terminalSetSupplier) {
+    @Override
+    public String toString() {
+        return "FunctionChromosome{" +
+                "head=" + head +
+                ", data=" + data +
+                "} " + super.toString();
+    }
+
+    public static FunctionChromosome getFunctionChromosome(int depth, FunctionSetSupplier functionSetSupplier, TerminalSetSupplier terminalSetSupplier, List<Map<Character, Double>> data) {
         List<List<Node>> nodesHolder = new ArrayList<>(depth);
         FunctionNode head = functionSetSupplier.get();
         nodesHolder.add(0, Collections.singletonList(head));
@@ -53,7 +70,7 @@ public class FunctionChromosome extends Chromosome {
             }
             nodesHolder.add(i, newLevel);
         }
-        return new FunctionChromosome(head);
+        return new FunctionChromosome(head, data);
     }
 
     private static void fillLeaves(List<Node> previousLevel, TerminalSetSupplier terminalSetSupplier) {
@@ -73,8 +90,10 @@ public class FunctionChromosome extends Chromosome {
         this.data = data;
     }
 
-    public FunctionChromosome DeepCopyExceptData() {
-
+    public FunctionChromosome deepCopyExceptData() {
+        FunctionChromosome toReturn = new FunctionChromosome(head.getClone());
+        toReturn.setData(this.data);
+        return toReturn;
     }
 
     public FunctionNode getRandomFunctionNode() {
